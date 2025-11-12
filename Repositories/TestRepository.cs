@@ -5,6 +5,7 @@ using TestingPlatform.Application.Interfaces;
 using TestingPlatform.Domain.Enums;
 using TestingPlatform.Domain.Models;
 using TestingPlatform.Infrastructure.Db;
+using TestingPlatform.Infrastructure.Exceptions;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace TestingPlatform.Infrastructure.Repositories
@@ -76,7 +77,7 @@ namespace TestingPlatform.Infrastructure.Repositories
 
             if (test == null)
             {
-                throw new Exception("Тест не найден.");
+                throw new EntityNotFoundException("Тест не найден");
             }
 
             return mapper.Map<TestDto>(test);
@@ -105,7 +106,7 @@ namespace TestingPlatform.Infrastructure.Repositories
 
             if (test == null)
             {
-                throw new Exception("Тест не найден.");
+                throw new EntityNotFoundException("Тест не найден");
             }
 
             test.Title = testDto.Title;
@@ -133,7 +134,7 @@ namespace TestingPlatform.Infrastructure.Repositories
 
             if (test == null)
             {
-                throw new Exception("Тест не найден.");
+                throw new EntityNotFoundException("Тест не найден");
             }
             appDbContext.Tests.Remove(test);
             await appDbContext.SaveChangesAsync();

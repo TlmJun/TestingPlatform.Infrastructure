@@ -4,6 +4,7 @@ using TestingPlatform.Application.Dtos;
 using TestingPlatform.Application.Interfaces;
 using TestingPlatform.Domain.Models;
 using TestingPlatform.Infrastructure.Db;
+using TestingPlatform.Infrastructure.Exceptions;
 
 namespace TestingPlatform.Infrastructure.Repositories;
 
@@ -47,21 +48,21 @@ public class GroupRepository(AppDbContext appDbContext, IMapper mapper) : IGroup
         var direction = await appDbContext.Directions.FirstOrDefaultAsync(d => d.Id == groupDto.Direction.Id);
         if (direction is null)
         {
-            throw new Exception("Направление не найдено.");
+            throw new EntityNotFoundException("Направление не найдено");
         }
         group.Direction = direction;
 
         var course = await appDbContext.Courses.FirstOrDefaultAsync(c => c.Id == groupDto.Course.Id);
         if (course is null)
         {
-            throw new Exception("Курс не найден.");
+            throw new EntityNotFoundException("Курс не найден");
         }
         group.Course = course;
 
         var project = await appDbContext.Projects.FirstOrDefaultAsync(p => p.Id == groupDto.Project.Id);
         if (project is null)
         {
-            throw new Exception("Проект не найден.");
+            throw new EntityNotFoundException("Проект не найден");
         }
         group.Project = project;
 
@@ -77,7 +78,7 @@ public class GroupRepository(AppDbContext appDbContext, IMapper mapper) : IGroup
 
         if (group == null)
         {
-            throw new Exception("Группа не найдена.");
+            throw new EntityNotFoundException("Группа не найден");
         }
 
         group.Name = groupDto.Name;
@@ -94,7 +95,7 @@ public class GroupRepository(AppDbContext appDbContext, IMapper mapper) : IGroup
 
         if (group == null)
         {
-            throw new Exception("Группа не найдена.");
+            throw new EntityNotFoundException("Группа не найден");
         }
 
         appDbContext.Groups.Remove(group);

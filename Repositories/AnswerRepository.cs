@@ -5,7 +5,9 @@ using TestingPlatform.Application.Interfaces;
 using TestingPlatform.Domain.Enums;
 using TestingPlatform.Domain.Models;
 using TestingPlatform.Infrastructure.Db;
+using TestingPlatform.Infrastructure.Exceptions;
 using static System.Net.Mime.MediaTypeNames;
+using TestingPlatform.Infrastructure.Exceptions;
 
 namespace TestingPlatform.Infrastructure.Repositories
 {
@@ -27,7 +29,7 @@ namespace TestingPlatform.Infrastructure.Repositories
 
             if (answer == null)
             {
-                throw new Exception("Ответ не найден.");
+                throw new EntityNotFoundException("Ответ не найден");
             }
 
             return mapper.Map<AnswerDto>(answer);
@@ -52,7 +54,7 @@ namespace TestingPlatform.Infrastructure.Repositories
 
             if (answer == null)
             {
-                throw new Exception("Ответ не найден.");
+                throw new EntityNotFoundException("Ответ не найден");
             }
 
             answer.Text = AnswerDto.Text!;
@@ -66,11 +68,12 @@ namespace TestingPlatform.Infrastructure.Repositories
 
             if (test == null)
             {
-                throw new Exception("Тест не найден.");
+                throw new EntityNotFoundException("Ответ не найден");
             }
 
             appDbContext.Tests.Remove(test);
             await appDbContext.SaveChangesAsync();
         }
+
     }
 }

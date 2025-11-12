@@ -5,6 +5,7 @@ using TestingPlatform.Application.Dtos;
 using TestingPlatform.Application.Interfaces;
 using TestingPlatform.Domain.Models;
 using TestingPlatform.Infrastructure.Db;
+using TestingPlatform.Infrastructure.Exceptions;
 
 namespace TestingPlatform.Infrastructure.Repositories;
 
@@ -24,7 +25,7 @@ public class UserRepository(AppDbContext appDbContext, IMapper mapper) : IUserRe
 
         if (user == null)
         {
-            throw new Exception("Пользователь не найден.");
+            throw new EntityNotFoundException("Пользователь не найден");
         }
 
         return mapper.Map<UserDto>(user);
@@ -51,7 +52,7 @@ public class UserRepository(AppDbContext appDbContext, IMapper mapper) : IUserRe
 
         if (user == null)
         {
-            throw new Exception("Пользователь не найден.");
+            throw new EntityNotFoundException("Пользователь не найден");
         }
 
         if (appDbContext.Users.Any(u => u.Login == userDto.Login))
@@ -72,7 +73,7 @@ public class UserRepository(AppDbContext appDbContext, IMapper mapper) : IUserRe
 
         if (user == null)
         {
-            throw new Exception("Пользователь не найден.");
+            throw new EntityNotFoundException("Пользователь не найден");
         }
 
         appDbContext.Users.Remove(user);
