@@ -69,7 +69,7 @@ public class StudentRepository(AppDbContext appDbContext, IMapper mapper) : IStu
             throw new Exception("Студент не найден.");
         }
 
-        appDbContext.User.Remove(student.User);
+        appDbContext.Users.Remove(student.User);
 
         await appDbContext.SaveChangesAsync();
     }

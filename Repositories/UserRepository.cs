@@ -12,13 +12,13 @@ public class UserRepository(AppDbContext appDbContext, IMapper mapper) : IUserRe
 {
     public async Task<IEnumerable<UserDto>> GetAllAsync()
     {
-        var users = await appDbContext.User.AsNoTracking().ToListAsync();
+        var users = await appDbContext.Users.AsNoTracking().ToListAsync();
         return mapper.Map<IEnumerable<UserDto>>(users);
     }
 
     public async Task<UserDto> GetByIdAsync(int id)
     {
-        var user = await appDbContext.User
+        var user = await appDbContext.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(user => user.Id == id);
 
@@ -47,14 +47,14 @@ public class UserRepository(AppDbContext appDbContext, IMapper mapper) : IUserRe
 
     public async Task UpdateAsync(UserDto userDto)
     {
-        var user = await appDbContext.User.FirstOrDefaultAsync(user => user.Id == userDto.Id);
+        var user = await appDbContext.Users.FirstOrDefaultAsync(user => user.Id == userDto.Id);
 
         if (user == null)
         {
             throw new Exception("Пользователь не найден.");
         }
 
-        if (appDbContext.User.Any(u => u.Login == userDto.Login))
+        if (appDbContext.Users.Any(u => u.Login == userDto.Login))
             throw new ArgumentException($"Пользователь с логином {userDto.Login} уже существует.");
 
         // var parsedFullname = FullnameHelper.Parse(userDto.FullName);
@@ -68,14 +68,14 @@ public class UserRepository(AppDbContext appDbContext, IMapper mapper) : IUserRe
 
     public async Task DeleteAsync(int id)
     {
-        var user = await appDbContext.User.FirstOrDefaultAsync(user => user.Id == id);
+        var user = await appDbContext.Users.FirstOrDefaultAsync(user => user.Id == id);
 
         if (user == null)
         {
             throw new Exception("Пользователь не найден.");
         }
 
-        appDbContext.User.Remove(user);
+        appDbContext.Users.Remove(user);
         await appDbContext.SaveChangesAsync();
     }
 }

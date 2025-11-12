@@ -6,9 +6,9 @@ using TestingPlatform.Domain.Models;
 namespace TestingPlatform.Infrastructure.Db;
     public class AppDbContext : DbContext
     {
-        public DbSet<Answer> Answer => Set<Answer>();                                                                         // 1
+        public DbSet<Answer> Answers => Set<Answer>();                                                                         // 1
 
-        public DbSet<Attempt> Attempt => Set<Attempt>();                                                                     // 2
+        public DbSet<Attempt> Attempts => Set<Attempt>();                                                                     // 2
 
         public DbSet<Course> Courses => Set<Course>();                                                                      // 3
 
@@ -22,17 +22,17 @@ namespace TestingPlatform.Infrastructure.Db;
 
         public DbSet<Student> Students => Set<Student>();                                                              // 8
 
-        public DbSet<Test> Test => Set<Test>();                                                                       // 9
+        public DbSet<Test> Tests => Set<Test>();                                                                       // 9
 
-        public DbSet<TestResult> TestResult => Set<TestResult>();                                                    // 10
+        public DbSet<TestResult> TestResults => Set<TestResult>();                                                    // 10
 
-        public DbSet<User> User => Set<User>();                                                                     // 11
+        public DbSet<User> Users => Set<User>();                                                                     // 11
 
-        public DbSet<UserAttemptAnswer> UserAttemptAnswer => Set<UserAttemptAnswer>();                             // 12
+        public DbSet<UserAttemptAnswer> UserAttemptAnswers => Set<UserAttemptAnswer>();                             // 12
 
-        public DbSet<UserSelectedOption> UserSelectedOption => Set<UserSelectedOption>();                         // 13 
+        public DbSet<UserSelectedOption> UserSelectedOptions => Set<UserSelectedOption>();                         // 13 
 
-        public DbSet<UserTextAnswer> UserTextAnswer => Set<UserTextAnswer>();                                    // 14
+        public DbSet<UserTextAnswer> UserTextAnswers => Set<UserTextAnswer>();                                    // 14
 
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
@@ -105,7 +105,7 @@ namespace TestingPlatform.Infrastructure.Db;
                 e.HasIndex(x => x.Name).IsUnique();
 
                 e.HasOne(x => x.Direction)
-                    .WithMany(d => d.Group)
+                    .WithMany(d => d.Groups)
                     .HasForeignKey(x => x.DirectionId)
                     .OnDelete(DeleteBehavior.Restrict);
 
@@ -115,7 +115,7 @@ namespace TestingPlatform.Infrastructure.Db;
                     .OnDelete(DeleteBehavior.Restrict);
 
                 e.HasOne(x => x.Project)
-                    .WithMany(p => p.Group)
+                    .WithMany(p => p.Groups)
                     .HasForeignKey(x => x.ProjectId)
                     .OnDelete(DeleteBehavior.Restrict);
             });

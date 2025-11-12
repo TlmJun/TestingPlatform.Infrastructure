@@ -13,7 +13,7 @@ namespace TestingPlatform.Infrastructure.Repositories
     {
         public async Task<List<AnswerDto>> GetAllAsync()
         {
-            var answers = await appDbContext.Answer
+            var answers = await appDbContext.Answers
                 .Include(s => s.Text)
                 .ToListAsync();
             return mapper.Map<List<AnswerDto>>(answers);
@@ -21,7 +21,7 @@ namespace TestingPlatform.Infrastructure.Repositories
 
         public async Task<AnswerDto> GetByIdAsync(int id)
         {
-            var answer = await appDbContext.Answer
+            var answer = await appDbContext.Answers
             .AsNoTracking()
             .FirstOrDefaultAsync(answer => answer.Id == id);
 
@@ -48,7 +48,7 @@ namespace TestingPlatform.Infrastructure.Repositories
 
         public async Task UpdateAsync(AnswerDto AnswerDto)
         {
-            var answer = await appDbContext.Answer.FirstOrDefaultAsync(answer => answer.Id == AnswerDto.Id);
+            var answer = await appDbContext.Answers.FirstOrDefaultAsync(answer => answer.Id == AnswerDto.Id);
 
             if (answer == null)
             {
@@ -62,14 +62,14 @@ namespace TestingPlatform.Infrastructure.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var test = await appDbContext.Test.FirstOrDefaultAsync(test => test.Id == id);
+            var test = await appDbContext.Tests.FirstOrDefaultAsync(test => test.Id == id);
 
             if (test == null)
             {
                 throw new Exception("Тест не найден.");
             }
 
-            appDbContext.Test.Remove(test);
+            appDbContext.Tests.Remove(test);
             await appDbContext.SaveChangesAsync();
         }
     }
