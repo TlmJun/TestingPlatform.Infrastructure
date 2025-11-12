@@ -144,6 +144,8 @@ namespace TestingPlatform.Infrastructure.Db;
             {
                 e.HasKey(x => x.Id);
 
+                e.Property(x => x.Phone).HasMaxLength(30).IsRequired(); ;
+                e.Property(x => x.VkProfileLink).IsRequired();
                 e.HasMany(s => s.TestResults)
                 .WithOne(w => w.Student)
                 .HasForeignKey(f => f.StudentId)
@@ -239,20 +241,6 @@ namespace TestingPlatform.Infrastructure.Db;
                 .OnDelete(DeleteBehavior.Cascade);
 
             });
-
-
-
-
-
-            modelBuilder.Entity<Student>(e =>
-            {
-                e.HasKey(x => x.Id);
-                e.Property(x => x.Phone).HasMaxLength(30).IsRequired(); ;
-                e.Property(x => x.VkProfileLink).IsRequired();
-            });
-
-
-
 
         }
     }
