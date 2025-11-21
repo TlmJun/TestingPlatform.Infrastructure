@@ -115,10 +115,10 @@ namespace TestingPlatform.Infrastructure.Repositories
             test.Type = testDto.Type;
             test.PublishedAt = testDto.PublishedAt;
             test.Deadline = testDto.Deadline;
-            test.DurationMinutes = testDto.DurationMinutes;
+            test.DurationMinutes = testDto.DurationMinutes.Value;
             test.IsPublic = testDto.IsPublic;
             test.PassingScore = testDto.PassingScore;
-            test.MaxAttempts = testDto.MaxAttempts;
+            test.MaxAttempts = testDto.MaxAttempts.Value;
 
             await UpdateMembersTest(test, testDto);
 
