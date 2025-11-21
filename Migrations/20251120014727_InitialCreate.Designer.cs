@@ -11,8 +11,8 @@ using TestingPlatform.Infrastructure.Db;
 namespace TestingPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251112155114_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20251120014727_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -115,7 +115,7 @@ namespace TestingPlatform.Infrastructure.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answer");
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("TestingPlatform.Domain.Models.Attempt", b =>
@@ -145,7 +145,7 @@ namespace TestingPlatform.Infrastructure.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("Attempt");
+                    b.ToTable("Attempts");
                 });
 
             modelBuilder.Entity("TestingPlatform.Domain.Models.Course", b =>
@@ -356,7 +356,7 @@ namespace TestingPlatform.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Test");
+                    b.ToTable("Tests");
                 });
 
             modelBuilder.Entity("TestingPlatform.Domain.Models.TestResult", b =>
@@ -388,7 +388,7 @@ namespace TestingPlatform.Infrastructure.Migrations
                     b.HasIndex("TestId")
                         .IsUnique();
 
-                    b.ToTable("TestResult");
+                    b.ToTable("TestResults");
                 });
 
             modelBuilder.Entity("TestingPlatform.Domain.Models.User", b =>
@@ -437,7 +437,7 @@ namespace TestingPlatform.Infrastructure.Migrations
                     b.HasIndex("Login")
                         .IsUnique();
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TestingPlatform.Domain.Models.UserAttemptAnswer", b =>
@@ -466,7 +466,7 @@ namespace TestingPlatform.Infrastructure.Migrations
                     b.HasIndex("QuestionId")
                         .IsUnique();
 
-                    b.ToTable("UserAttemptAnswer");
+                    b.ToTable("UserAttemptAnswers");
                 });
 
             modelBuilder.Entity("TestingPlatform.Domain.Models.UserSelectedOption", b =>
@@ -492,7 +492,7 @@ namespace TestingPlatform.Infrastructure.Migrations
 
                     b.HasIndex("UserTextAnswerId");
 
-                    b.ToTable("UserSelectedOption");
+                    b.ToTable("UserSelectedOptions");
                 });
 
             modelBuilder.Entity("TestingPlatform.Domain.Models.UserTextAnswer", b =>
@@ -513,7 +513,7 @@ namespace TestingPlatform.Infrastructure.Migrations
                     b.HasIndex("UserAttemptAnswerId")
                         .IsUnique();
 
-                    b.ToTable("UserTextAnswer");
+                    b.ToTable("UserTextAnswers");
                 });
 
             modelBuilder.Entity("CourseTest", b =>
@@ -630,13 +630,13 @@ namespace TestingPlatform.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("TestingPlatform.Domain.Models.Direction", "Direction")
-                        .WithMany("Group")
+                        .WithMany("Groups")
                         .HasForeignKey("DirectionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("TestingPlatform.Domain.Models.Project", "Project")
-                        .WithMany("Group")
+                        .WithMany("Groups")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -781,7 +781,7 @@ namespace TestingPlatform.Infrastructure.Migrations
 
             modelBuilder.Entity("TestingPlatform.Domain.Models.Direction", b =>
                 {
-                    b.Navigation("Group");
+                    b.Navigation("Groups");
                 });
 
             modelBuilder.Entity("TestingPlatform.Domain.Models.Group", b =>
@@ -791,7 +791,7 @@ namespace TestingPlatform.Infrastructure.Migrations
 
             modelBuilder.Entity("TestingPlatform.Domain.Models.Project", b =>
                 {
-                    b.Navigation("Group");
+                    b.Navigation("Groups");
                 });
 
             modelBuilder.Entity("TestingPlatform.Domain.Models.Question", b =>

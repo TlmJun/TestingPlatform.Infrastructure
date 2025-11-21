@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TestingPlatform.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,7 +51,7 @@ namespace TestingPlatform.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Test",
+                name: "Tests",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -70,11 +70,11 @@ namespace TestingPlatform.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Test", x => x.Id);
+                    table.PrimaryKey("PK_Tests", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -90,7 +90,7 @@ namespace TestingPlatform.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -145,9 +145,9 @@ namespace TestingPlatform.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Question", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Question_Test_TestId",
+                        name: "FK_Question_Tests_TestId",
                         column: x => x.TestId,
-                        principalTable: "Test",
+                        principalTable: "Tests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -169,9 +169,9 @@ namespace TestingPlatform.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_test_courses_Test_TestsId",
+                        name: "FK_test_courses_Tests_TestsId",
                         column: x => x.TestsId,
-                        principalTable: "Test",
+                        principalTable: "Tests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -193,9 +193,9 @@ namespace TestingPlatform.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_test_directions_Test_TestsId",
+                        name: "FK_test_directions_Tests_TestsId",
                         column: x => x.TestsId,
-                        principalTable: "Test",
+                        principalTable: "Tests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -217,9 +217,9 @@ namespace TestingPlatform.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_test_projects_Test_TestsId",
+                        name: "FK_test_projects_Tests_TestsId",
                         column: x => x.TestsId,
-                        principalTable: "Test",
+                        principalTable: "Tests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -250,9 +250,9 @@ namespace TestingPlatform.Infrastructure.Migrations
                         principalTable: "Students",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Students_User_UserId",
+                        name: "FK_Students_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -274,15 +274,15 @@ namespace TestingPlatform.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_test_groups_Test_TestsId",
+                        name: "FK_test_groups_Tests_TestsId",
                         column: x => x.TestsId,
-                        principalTable: "Test",
+                        principalTable: "Tests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Answer",
+                name: "Answers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -293,9 +293,9 @@ namespace TestingPlatform.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Answer", x => x.Id);
+                    table.PrimaryKey("PK_Answers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Answer_Question_QuestionId",
+                        name: "FK_Answers_Question_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Question",
                         principalColumn: "Id",
@@ -303,7 +303,7 @@ namespace TestingPlatform.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Attempt",
+                name: "Attempts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -316,17 +316,17 @@ namespace TestingPlatform.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Attempt", x => x.Id);
+                    table.PrimaryKey("PK_Attempts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Attempt_Students_StudentId",
+                        name: "FK_Attempts_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Attempt_Test_TestId",
+                        name: "FK_Attempts_Tests_TestId",
                         column: x => x.TestId,
-                        principalTable: "Test",
+                        principalTable: "Tests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -348,15 +348,15 @@ namespace TestingPlatform.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_test_students_Test_TestsId",
+                        name: "FK_test_students_Tests_TestsId",
                         column: x => x.TestsId,
-                        principalTable: "Test",
+                        principalTable: "Tests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestResult",
+                name: "TestResults",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -368,29 +368,29 @@ namespace TestingPlatform.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TestResult", x => x.Id);
+                    table.PrimaryKey("PK_TestResults", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TestResult_Attempt_AttemptId",
+                        name: "FK_TestResults_Attempts_AttemptId",
                         column: x => x.AttemptId,
-                        principalTable: "Attempt",
+                        principalTable: "Attempts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TestResult_Students_StudentId",
+                        name: "FK_TestResults_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TestResult_Test_TestId",
+                        name: "FK_TestResults_Tests_TestId",
                         column: x => x.TestId,
-                        principalTable: "Test",
+                        principalTable: "Tests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserAttemptAnswer",
+                name: "UserAttemptAnswers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -402,15 +402,15 @@ namespace TestingPlatform.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserAttemptAnswer", x => x.Id);
+                    table.PrimaryKey("PK_UserAttemptAnswers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserAttemptAnswer_Attempt_AttemptId",
+                        name: "FK_UserAttemptAnswers_Attempts_AttemptId",
                         column: x => x.AttemptId,
-                        principalTable: "Attempt",
+                        principalTable: "Attempts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserAttemptAnswer_Question_QuestionId",
+                        name: "FK_UserAttemptAnswers_Question_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Question",
                         principalColumn: "Id",
@@ -418,7 +418,7 @@ namespace TestingPlatform.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserTextAnswer",
+                name: "UserTextAnswers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -428,17 +428,17 @@ namespace TestingPlatform.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserTextAnswer", x => x.Id);
+                    table.PrimaryKey("PK_UserTextAnswers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserTextAnswer_UserAttemptAnswer_UserAttemptAnswerId",
+                        name: "FK_UserTextAnswers_UserAttemptAnswers_UserAttemptAnswerId",
                         column: x => x.UserAttemptAnswerId,
-                        principalTable: "UserAttemptAnswer",
+                        principalTable: "UserAttemptAnswers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserSelectedOption",
+                name: "UserSelectedOptions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -449,39 +449,39 @@ namespace TestingPlatform.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserSelectedOption", x => x.Id);
+                    table.PrimaryKey("PK_UserSelectedOptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserSelectedOption_Answer_AnswerId",
+                        name: "FK_UserSelectedOptions_Answers_AnswerId",
                         column: x => x.AnswerId,
-                        principalTable: "Answer",
+                        principalTable: "Answers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserSelectedOption_UserAttemptAnswer_UserAttemptAnswerId",
+                        name: "FK_UserSelectedOptions_UserAttemptAnswers_UserAttemptAnswerId",
                         column: x => x.UserAttemptAnswerId,
-                        principalTable: "UserAttemptAnswer",
+                        principalTable: "UserAttemptAnswers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserSelectedOption_UserTextAnswer_UserTextAnswerId",
+                        name: "FK_UserSelectedOptions_UserTextAnswers_UserTextAnswerId",
                         column: x => x.UserTextAnswerId,
-                        principalTable: "UserTextAnswer",
+                        principalTable: "UserTextAnswers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answer_QuestionId",
-                table: "Answer",
+                name: "IX_Answers_QuestionId",
+                table: "Answers",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attempt_StudentId",
-                table: "Attempt",
+                name: "IX_Attempts_StudentId",
+                table: "Attempts",
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attempt_TestId",
-                table: "Attempt",
+                name: "IX_Attempts_TestId",
+                table: "Attempts",
                 column: "TestId");
 
             migrationBuilder.CreateIndex(
@@ -577,65 +577,65 @@ namespace TestingPlatform.Infrastructure.Migrations
                 column: "TestsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestResult_AttemptId",
-                table: "TestResult",
+                name: "IX_TestResults_AttemptId",
+                table: "TestResults",
                 column: "AttemptId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestResult_StudentId",
-                table: "TestResult",
+                name: "IX_TestResults_StudentId",
+                table: "TestResults",
                 column: "StudentId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestResult_TestId",
-                table: "TestResult",
+                name: "IX_TestResults_TestId",
+                table: "TestResults",
                 column: "TestId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Email",
-                table: "User",
-                column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_Login",
-                table: "User",
-                column: "Login",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserAttemptAnswer_AttemptId",
-                table: "UserAttemptAnswer",
+                name: "IX_UserAttemptAnswers_AttemptId",
+                table: "UserAttemptAnswers",
                 column: "AttemptId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserAttemptAnswer_QuestionId",
-                table: "UserAttemptAnswer",
+                name: "IX_UserAttemptAnswers_QuestionId",
+                table: "UserAttemptAnswers",
                 column: "QuestionId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSelectedOption_AnswerId",
-                table: "UserSelectedOption",
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Login",
+                table: "Users",
+                column: "Login",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSelectedOptions_AnswerId",
+                table: "UserSelectedOptions",
                 column: "AnswerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSelectedOption_UserAttemptAnswerId",
-                table: "UserSelectedOption",
+                name: "IX_UserSelectedOptions_UserAttemptAnswerId",
+                table: "UserSelectedOptions",
                 column: "UserAttemptAnswerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSelectedOption_UserTextAnswerId",
-                table: "UserSelectedOption",
+                name: "IX_UserSelectedOptions_UserTextAnswerId",
+                table: "UserSelectedOptions",
                 column: "UserTextAnswerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserTextAnswer_UserAttemptAnswerId",
-                table: "UserTextAnswer",
+                name: "IX_UserTextAnswers_UserAttemptAnswerId",
+                table: "UserTextAnswers",
                 column: "UserAttemptAnswerId",
                 unique: true);
         }
@@ -659,22 +659,22 @@ namespace TestingPlatform.Infrastructure.Migrations
                 name: "test_students");
 
             migrationBuilder.DropTable(
-                name: "TestResult");
+                name: "TestResults");
 
             migrationBuilder.DropTable(
-                name: "UserSelectedOption");
+                name: "UserSelectedOptions");
 
             migrationBuilder.DropTable(
-                name: "Answer");
+                name: "Answers");
 
             migrationBuilder.DropTable(
-                name: "UserTextAnswer");
+                name: "UserTextAnswers");
 
             migrationBuilder.DropTable(
-                name: "UserAttemptAnswer");
+                name: "UserAttemptAnswers");
 
             migrationBuilder.DropTable(
-                name: "Attempt");
+                name: "Attempts");
 
             migrationBuilder.DropTable(
                 name: "Question");
@@ -683,13 +683,13 @@ namespace TestingPlatform.Infrastructure.Migrations
                 name: "Students");
 
             migrationBuilder.DropTable(
-                name: "Test");
+                name: "Tests");
 
             migrationBuilder.DropTable(
                 name: "Groups");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Courses");
