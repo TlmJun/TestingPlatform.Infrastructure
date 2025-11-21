@@ -11,13 +11,13 @@ namespace TestingPlatform.Infrastructure.Repositories;
 
 public class QuestionRepository(AppDbContext appDbContext, IMapper mapper, ILogger<QuestionRepository> logger) : IQuestionRepository
 {
-    public async Task<IEnumerable<QuestionDto>> GetAllAsync()
+    public async Task<List<QuestionDto>> GetAllAsync()
     {
         logger.LogInformation("Получен запрос на получение всех вопросов");
         var questions = await appDbContext.Question.AsNoTracking().ToListAsync();
 
         logger.LogInformation("Из базы получено {Count} вопросов", questions.Count);
-        return mapper.Map<IEnumerable<QuestionDto>>(questions);
+        return mapper.Map<List<QuestionDto>>(questions);
     }
 
     public async Task<QuestionDto> GetByIdAsync(int id)
