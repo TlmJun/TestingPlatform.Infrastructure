@@ -38,7 +38,7 @@ public class UserRepository(AppDbContext appDbContext, IMapper mapper) : IUserRe
         user.FirstName = userDto.FirstName;
         user.LastName = userDto.LastName;
         user.MiddleName = userDto.MiddleName;
-        user.PasswordHash = userDto.Password;
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
 
         await appDbContext.AddAsync(user);
         await appDbContext.SaveChangesAsync();
