@@ -17,6 +17,22 @@ public class StudentRepository(AppDbContext appDbContext, IMapper mapper) : IStu
             .ToListAsync();
         return mapper.Map<IEnumerable<StudentDto>>(students);
     }
+    public async Task<StudentDto?> GetStudentByUserId(int userId)
+    {
+        var student = await appDbContext.Students
+            .Include(s => s.User)
+            .Include(s => s.Tests)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(student => student.UserId == userId);
+
+        if (student == null)
+        {
+            return null;
+        }
+
+        return mapper.Map<StudentDto>(student);
+    }
+
 
     public async Task<StudentDto> GetByIdAsync(int id)
     {

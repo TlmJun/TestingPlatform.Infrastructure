@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using TestingPlatform.Domain.Enums;
 using TestingPlatform.Domain.Models;
 
 namespace TestingPlatform.Infrastructure.Db;
@@ -34,8 +35,8 @@ namespace TestingPlatform.Infrastructure.Db;
 
         public DbSet<UserTextAnswer> UserTextAnswers => Set<UserTextAnswer>();                                    // 14
 
-
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();                                        // 15
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -208,7 +209,20 @@ namespace TestingPlatform.Infrastructure.Db;
                     .WithOne(s => s.User)
                     .HasForeignKey<Student>(s => s.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
-            });
+            new User
+            {
+                Id = 100,
+                FirstName = "Иван",
+                MiddleName = "Иванович",
+                LastName = "Иванов",
+                Login = "manager",
+                Email = "manager@local",
+                PasswordHash = "$2a$11$pThhbbceEToQ9dK9L/7yo.hZ/hi6Kg4mlXa5Z0X8T3OF61O0wHGUW", // manager
+                Role = UserRole.Manager,
+                CreatedAt = DateTime.UtcNow
+            };
+
+    });
             modelBuilder.Entity<UserAttemptAnswer>(e =>                                                     //  UserAttemptAnswer 12
             {
                 e.HasKey(x => x.Id);
@@ -241,8 +255,22 @@ namespace TestingPlatform.Infrastructure.Db;
                 .OnDelete(DeleteBehavior.Cascade);
 
             });
+            modelBuilder.Entity<RefreshToken>(e =>                                                        // RefreshToken 15
+            {
+                e.HasIndex(rt => rt.TokenHash);
 
-        }
+                e.HasOne(rt => rt.User)
+                   .WithMany(u => u.RefreshTokens)
+                   .HasForeignKey(rt => rt.UserId);
+
+            });
+
+
+
+
+        
+
+    }
     }
 
 
