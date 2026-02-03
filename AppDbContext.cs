@@ -35,7 +35,7 @@ namespace TestingPlatform.Infrastructure.Db;
 
         public DbSet<UserTextAnswer> UserTextAnswers => Set<UserTextAnswer>();                                    // 14
 
-        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();                                        // 15
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();                                        // 15               RefreshToken
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -264,11 +264,20 @@ namespace TestingPlatform.Infrastructure.Db;
                    .HasForeignKey(rt => rt.UserId);
 
             });
-
-
-
-
-        
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    Id = 100,
+                    FirstName = "Иван",
+                    MiddleName = "Иванович",
+                    LastName = "Иванов",
+                    Login = "manager",
+                    Email = "manager@local",
+                    PasswordHash = "$2a$11$pThhbbceEToQ9dK9L/7yo.hZ/hi6Kg4mlXa5Z0X8T3OF61O0wHGUW", // manager
+                    Role = UserRole.Manager,
+                    CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                }
+                );
 
     }
     }

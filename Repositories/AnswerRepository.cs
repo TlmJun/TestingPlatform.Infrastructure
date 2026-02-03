@@ -7,73 +7,92 @@ using TestingPlatform.Domain.Models;
 using TestingPlatform.Infrastructure.Db;
 using TestingPlatform.Infrastructure.Exceptions;
 using static System.Net.Mime.MediaTypeNames;
-using TestingPlatform.Infrastructure.Exceptions;
 
-namespace TestingPlatform.Infrastructure.Repositories
+namespace TestingPlatform.Infrastructure.Repositories;
+
+public class AnswerRepository(AppDbContext appDbContext, IMapper mapper) : IAnswerRepository
 {
-    public class AnswerRepository(AppDbContext appDbContext, IMapper mapper) : IAnswerRepository
+    public async Task<int> CreateAsync(AnswerDto answerDto)
     {
-        public async Task<List<AnswerDto>> GetAllAsync()
-        {
-            var answers = await appDbContext.Answers
-                .Include(s => s.Text)
-                .ToListAsync();
-            return mapper.Map<List<AnswerDto>>(answers);
-        }
+        var answer = mapper.Map<Answer>(answerDto);
 
-        public async Task<AnswerDto> GetByIdAsync(int id)
-        {
-            var answer = await appDbContext.Answers
-            .AsNoTracking()
-            .FirstOrDefaultAsync(answer => answer.Id == id);
+        var question = await appDbContext.Question
+            .Include(question => question.Answers)
+            .FirstOrDefaultAsync(question => question.Id == answerDto.QuestionId);
 
-            if (answer == null)
-            {
-                throw new EntityNotFoundException("Ответ не найден");
-            }
+        if (question is null)
+            throw new EntityNotFoundException("Вопрос не найден.");
 
-            return mapper.Map<AnswerDto>(answer);
-        }
+        if (question.AnswerType == AnswerType.Text)
+            throw new ArgumentException("К текстовому вопросу нельзя добавить ответ");
 
+        if (question.AnswerType == AnswerType.Single && answer.IsCorrect && question.Answers.Any(a => a.IsCorrect))
+            throw new ArgumentException("В данном типе теста можно выбрать только один правильный ответ");
 
-        public async Task<int> CreateAsync(AnswerDto AnswerDto)
-        {
-            var test = mapper.Map<AnswerDto>(AnswerDto);
+        var answerId = await appDbContext.AddAsync(answer);
+        await appDbContext.SaveChangesAsync();
 
-            test.Text = AnswerDto.Text;
-
-            await appDbContext.AddAsync(test);
-            await appDbContext.SaveChangesAsync();
-
-            return test.Id;
-        }
-
-        public async Task UpdateAsync(AnswerDto AnswerDto)
-        {
-            var answer = await appDbContext.Answers.FirstOrDefaultAsync(answer => answer.Id == AnswerDto.Id);
-
-            if (answer == null)
-            {
-                throw new EntityNotFoundException("Ответ не найден");
-            }
-
-            answer.Text = AnswerDto.Text!;
-
-            await appDbContext.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var test = await appDbContext.Tests.FirstOrDefaultAsync(test => test.Id == id);
-
-            if (test == null)
-            {
-                throw new EntityNotFoundException("Ответ не найден");
-            }
-
-            appDbContext.Tests.Remove(test);
-            await appDbContext.SaveChangesAsync();
-        }
-
+        return answerId.Entity.Id;
     }
+
+    public async Task UpdateAsync(AttemptDto attemptDto)
+    {
+        var attempt = await appDbContext.Attempts
+            .Include(attempt => attempt.UserAttemptAnswers)
+            .FirstOrDefaultAsync(a => a.Id == attemptDto.Id);
+
+        if (attempt is null)
+            throw new EntityNotFoundException("Попытка не найдена");
+
+        if (attempt.SubmittedAt != null)
+            throw new InvalidOperationException("Нельзя завершить уже сданную попытку.");
+
+        attempt.SubmittedAt = DateTime.Now;
+
+        var score = attempt.UserAttemptAnswers.Sum(ua => ua.ScoreAwarded);
+        attempt.Score = score;
+
+        var test = await appDbContext.Tests.AsNoTracking().FirstOrDefaultAsync(test => test.Id == attempt.TestId);
+
+        var testResult = await appDbContext.TestResults
+            .Include(tr => tr.Attempt)
+            .FirstOrDefaultAsync(tr => tr.TestId == attempt.TestId);
+
+        if (testResult == null)
+        {
+            var newtestResult = new TestResult
+            {
+                AttemptId = attempt.Id,
+                StudentId = attempt.StudentId,
+                TestId = attempt.TestId,
+                Passed = test!.PassingScore == null || test.PassingScore <= attempt.Score, // если не указан проходной балл, то true, иначе сравниваем с наилучшей попыткой
+            };
+
+            await appDbContext.TestResults.AddAsync(newtestResult);
+        }
+        else
+        {
+            if (testResult.Attempt.Score < attempt.Score)
+            {
+                testResult.AttemptId = attempt.Id;
+                testResult.Passed = test!.PassingScore == null || test.PassingScore <= attempt.Score;
+            }
+        }
+
+        await appDbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(int answerId)
+    {
+        var answer = await appDbContext.Answers.FirstOrDefaultAsync(answer => answer.Id == answerId);
+
+        if (answer == null)
+        {
+            throw new EntityNotFoundException("Ответ не найден.");
+        }
+
+        appDbContext.Answers.Remove(answer);
+        await appDbContext.SaveChangesAsync();
+    }
+
 }

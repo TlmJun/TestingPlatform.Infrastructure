@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using TestingPlatform.Application.Dtos;
 using TestingPlatform.Application.Interfaces;
@@ -15,29 +16,15 @@ namespace TestingPlatform.Infrastructure.Repositories
         public async Task<IEnumerable<TestDto>> GetAllAsync(bool? isPublic, List<int> groupIds, List<int> studentIds)
         {
             await RefreshPublicationStatusesAsync();
-            // Формируем базовый запрос к таблице Tests.
-            // OrderByDescending - сортируем тесты по дате публикации (новые сверху),
-            // ThenBy - вторичная сортировка по названию
-            // AsNoTracking - отключаем отслеживание, так как данные только читаются.
-            // AsQueryable - делаем запрос динамическим, чтобы добавлять фильтры по условиям.
             var tests = appDbContext.Tests
                 .OrderByDescending(t => t.PublishedAt)
                 .ThenBy(t => t.Title)
                 .AsNoTracking()
                 .AsQueryable();
-
-            // Если задан параметр публичности, добавляем фильтр по полю IsPublic.
-            // Where - добавляет условие, но запрос пока не выполняется (отложенное выполнение).
             if (isPublic is not null)
                 tests = tests.Where(t => t.IsPublic == isPublic);
-
-            // Если переданы идентификаторы групп, выбираем тесты, связанные с этими группами.
-            // Any - проверяет, есть ли у теста хотя бы одна группа с подходящим Id.
             if (groupIds.Any())
                 tests = tests.Where(t => t.Groups.Any(g => groupIds.Contains(g.Id)));
-
-            // Аналогично фильтруем по студентам.
-            // Выбираем тесты, где хотя бы один студент совпадает с переданным списком.
             if (studentIds.Any())
                 tests = tests.Where(t => t.Students.Any(s => studentIds.Contains(s.Id)));
 
@@ -60,7 +47,19 @@ namespace TestingPlatform.Infrastructure.Repositories
 
             return mapper.Map<IEnumerable<TestDto>>(tests);
         }
-
+        
+        public async Task<IEnumerable<TestDto>> GetTestForStudentById(int studentId)    //ыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыыы
+        {
+            await RefreshPublicationStatusesAsync();
+            var tests = await appDbContext.Tests
+                .Where(t => t.IsPublic)
+                .Where(t =>
+                    t.Students.Any(s => s.Id == studentId)
+                    || t.Courses.Any(c => c.Groups.Any(g => g.Students.Any(s => s.Id == studentId)))
+                )
+                .ToListAsync();
+            return mapper.Map<IEnumerable<TestDto>>(tests);
+        }
         public async Task<TestDto> GetByIdAsync(int id)
         {
             await RefreshPublicationStatusesAsync();

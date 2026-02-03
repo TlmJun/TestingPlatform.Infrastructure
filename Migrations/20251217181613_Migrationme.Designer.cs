@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestingPlatform.Infrastructure.Db;
 
@@ -10,9 +11,11 @@ using TestingPlatform.Infrastructure.Db;
 namespace TestingPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251217181613_Migrationme")]
+    partial class Migrationme
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
@@ -311,9 +314,6 @@ namespace TestingPlatform.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AvatarPath")
-                        .HasColumnType("TEXT");
-
                     b.Property<int?>("GroupId")
                         .HasColumnType("INTEGER");
 
@@ -475,7 +475,7 @@ namespace TestingPlatform.Infrastructure.Migrations
                         new
                         {
                             Id = 100,
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 17, 18, 16, 13, 279, DateTimeKind.Utc).AddTicks(6170),
                             Email = "manager@local",
                             FirstName = "Иван",
                             LastName = "Иванов",

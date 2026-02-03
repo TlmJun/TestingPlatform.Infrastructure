@@ -75,6 +75,19 @@ public class StudentRepository(AppDbContext appDbContext, IMapper mapper) : IStu
         await appDbContext.SaveChangesAsync();
     }
 
+    public async Task UpdateAvatarAsync(StudentDto studentDto)
+    {
+        var student = await appDbContext.Students.FirstOrDefaultAsync(student => student.Id == studentDto.Id);
+
+        if (student == null)
+        {
+            throw new EntityNotFoundException("Студент не найден.");
+        }
+
+        student.AvatarPath = studentDto.AvatarPath;
+        await appDbContext.SaveChangesAsync();
+    }
+
     public async Task DeleteAsync(int id)
     {
         var student = await appDbContext.Students
